@@ -1,6 +1,7 @@
 package moon_lander;
 
 import java.awt.Color;
+
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,7 @@ public class Game {
     /**
      * The space rocket with which player will have to land.
      */
-    private PlayerRocket playerRocket;
+    private PlayerRocket playerRocket1;
     
     /**
      * Landing area on which rocket will have to land.
@@ -63,7 +64,7 @@ public class Game {
      */
     private void Initialize()
     {
-        playerRocket = new PlayerRocket();
+        playerRocket1 = new PlayerRocket();
         landingArea  = new LandingArea();
     }
     
@@ -91,7 +92,7 @@ public class Game {
      */
     public void RestartGame()
     {
-        playerRocket.ResetPlayer();
+        playerRocket1.ResetPlayer();
     }
     
     
@@ -104,23 +105,23 @@ public class Game {
     public void UpdateGame(long gameTime, Point mousePosition)
     {
         // Move the rocket
-        playerRocket.Update();
+        playerRocket1.Update();
         
         // Checks where the player rocket is. Is it still in the space or is it landed or crashed?
         // First we check bottom y coordinate of the rocket if is it near the landing area.
-        if(playerRocket.y + playerRocket.rocketImgHeight - 10 > landingArea.y)
+        if(playerRocket1.y + playerRocket1.rocketImgHeight - 10 > landingArea.y)
         {
             // Here we check if the rocket is over landing area.
-            if((playerRocket.x > landingArea.x) && (playerRocket.x < landingArea.x + landingArea.landingAreaImgWidth - playerRocket.rocketImgWidth))
+            if((playerRocket1.x > landingArea.x) && (playerRocket1.x < landingArea.x + landingArea.landingAreaImgWidth - playerRocket1.rocketImgWidth))
             {
                 // Here we check if the rocket speed isn't too high.
-                if(playerRocket.speedY <= playerRocket.topLandingSpeed)
-                    playerRocket.landed = true;
+                if(playerRocket1.speedY <= playerRocket1.topLandingSpeed)
+                    playerRocket1.landed = true;
                 else
-                    playerRocket.crashed = true;
+                    playerRocket1.crashed = true;
             }
             else
-                playerRocket.crashed = true;
+                playerRocket1.crashed = true;
                 
             Framework.gameState = Framework.GameState.GAMEOVER;
         }
@@ -138,7 +139,7 @@ public class Game {
         
         landingArea.Draw(g2d);
         
-        playerRocket.Draw(g2d);
+        playerRocket1.Draw(g2d);
     }
     
     
@@ -155,7 +156,7 @@ public class Game {
         
         g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3 + 70);
         
-        if(playerRocket.landed)
+        if(playerRocket1.landed)
         {
             g2d.drawString("You have successfully landed!", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3);
             g2d.drawString("You have landed in " + gameTime / Framework.secInNanosec + " seconds.", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3 + 20);

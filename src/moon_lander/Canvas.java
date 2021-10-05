@@ -1,6 +1,7 @@
 package moon_lander;
 
 import java.awt.Color;
+
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -8,9 +9,14 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 
 /**
@@ -19,7 +25,7 @@ import javax.swing.JPanel;
  * @author www.gametutorial.net
  */
 
-public abstract class Canvas extends JPanel implements KeyListener, MouseListener {
+public abstract class Canvas extends JPanel implements KeyListener, MouseListener, FocusListener {
     
     // Keyboard states - Here are stored states for keyboard keys - is it down or not.
     private static boolean[] keyboardState = new boolean[525];
@@ -48,7 +54,17 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
         this.addKeyListener(this);
         // Adds the mouse listener to JPanel to receive mouse events from this component.
         this.addMouseListener(this);
+        
+        this.addFocusListener(this);
+        
+        
     }
+    
+    
+    public void focusGained(FocusEvent e) {}
+    public void focusLost(FocusEvent e) {}
+    
+  
     
     
     // This method is overridden in Framework.java and is used for drawing to the screen.
@@ -143,3 +159,8 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
     public void mouseExited(MouseEvent e) { }
     
 }
+
+
+
+
+

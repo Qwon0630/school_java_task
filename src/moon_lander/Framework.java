@@ -1,17 +1,23 @@
 package moon_lander;
 
 import java.awt.Color;
+
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 /**
  * Framework that controls the game (Game.java) that created it, update it and draw it on the screen.
  * 
@@ -54,7 +60,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING, MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING, MAIN_MENU, OPTIONS, PLAYING, PLAYING2P, GAMEOVER, GAMEOVER2P, DESTROYED}
     /**
      * Current state of the game
      */
@@ -69,6 +75,7 @@ public class Framework extends Canvas {
     
     // The actual game
     private Game game;
+    private Game2p game2p;
     
     
     /**
@@ -76,6 +83,60 @@ public class Framework extends Canvas {
      */
     private BufferedImage moonLanderMenuImg;
     
+    
+   JButton button1 = new JButton("1p");
+   JButton button2 = new JButton("2p");
+   JButton button3 = new JButton("3");
+   JButton button4 = new JButton("4");
+   
+    public void buttonAdd(boolean add) {
+    	if(add) {
+    		this.add(button1);
+    		this.add(button2);
+    		this.add(button3);
+    		this.add(button4);  		
+    	
+    		button1.setVisible(add);
+    		button1.setBounds(100,400,125,50);
+    		
+    		button1.addActionListener(new ActionListener() {
+    			public void actionPerformed(ActionEvent e) {
+    				newGame();
+    			}
+    		});
+    		 
+    		button2.setVisible(add);
+    		button2.setBounds(250,400,125,50 );
+    		
+    		button2.addActionListener(new ActionListener() {
+    			public void actionPerformed(ActionEvent e) {
+    				newGame2p();
+    			}
+    		});
+    		button3.setVisible(add);
+    		button3.setBounds(400,400,125,50);
+    		
+    		button4.setVisible(add);
+    		button4.setBounds(550,400,125,50);
+    
+    	}
+    	else {
+    		this.remove(button1);
+    		this.remove(button2);
+    		this.remove(button3);
+    		this.remove(button4);
+    		
+    	}
+    }
+    
+    
+    
+    	
+    	
+    
+    
+    
+  
     
     public Framework ()
     {
@@ -143,9 +204,20 @@ public class Framework extends Canvas {
                     
                     lastTime = System.nanoTime();
                 break;
+                case PLAYING2P:
+                    gameTime += System.nanoTime() - lastTime;
+                    
+                    game2p.UpdateGame(gameTime, mousePosition());
+                    
+                    lastTime = System.nanoTime();
+                break;
+                    
+                	
                 case GAMEOVER:
                     //...
                 break;
+                case GAMEOVER2P:
+                	break;
                 case MAIN_MENU:
                     //...
                 break;
@@ -211,23 +283,38 @@ public class Framework extends Canvas {
         {
             case PLAYING:
                 game.Draw(g2d, mousePosition());
+                buttonAdd(false);
             break;
+            case PLAYING2P:
+            	game2p.Draw(g2d, mousePosition());
+            	buttonAdd(false);
+            	break;
             case GAMEOVER:
                 game.DrawGameOver(g2d, mousePosition(), gameTime);
+                buttonAdd(false);
             break;
+            case GAMEOVER2P:
+            	game2p.DrawGameOver(g2d, mousePosition(), gameTime);
+            	buttonAdd(false);
             case MAIN_MENU:
                 g2d.drawImage(moonLanderMenuImg, 0, 0, frameWidth, frameHeight, null);
                 g2d.setColor(Color.white);
-                g2d.drawString("Use w a d keys to controle the rocket.", frameWidth / 2 - 117, frameHeight / 2);
-                g2d.drawString("Press any key to start the game.", frameWidth / 2 - 100, frameHeight / 2 + 30);
+                g2d.drawString("Use w a d keys to controle the rocket1.", frameWidth / 2 - 117, frameHeight / 2);
+                g2d.drawString("Use up left right keys to controle the rocket2.", frameWidth / 2 - 117, frameHeight / 2 + 30);
                 g2d.drawString("WWW.GAMETUTORIAL.NET", 7, frameHeight - 5);
+                buttonAdd(true);
+                
+                
+                
             break;
             case OPTIONS:
+            	buttonAdd(false);
                 //...
             break;
             case GAME_CONTENT_LOADING:
                 g2d.setColor(Color.white);
                 g2d.drawString("GAME is LOADING", frameWidth / 2 - 50, frameHeight / 2);
+                buttonAdd(false);
             break;
         }
     }
@@ -242,7 +329,19 @@ public class Framework extends Canvas {
         lastTime = System.nanoTime();
         
         game = new Game();
+        
+        requestFocus();
+
     }
+    private void newGame2p() {
+    	gameTime = 0;
+    	lastTime = System.nanoTime();
+    	
+    	game2p = new Game2p();
+    	
+    	requestFocus();
+    }
+   
     
     /**
      *  Restart game - reset game time and call RestartGame() method of game object so that reset some variables.
@@ -292,11 +391,13 @@ public class Framework extends Canvas {
     {
         switch (gameState)
         {
-            case MAIN_MENU:
-                newGame();
-            break;
+            
             case GAMEOVER:
                 if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER)
+                    restartGame();
+            break;
+            case GAMEOVER2P:
+            	if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER)
                     restartGame();
             break;
         }

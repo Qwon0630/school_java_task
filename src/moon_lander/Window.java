@@ -1,6 +1,7 @@
 package moon_lander;
 
 import javax.swing.JFrame;
+
 import javax.swing.SwingUtilities;
 
 /**
@@ -14,7 +15,7 @@ public class Window extends JFrame{
     private Window()
     {
         // Sets the title for this frame.
-        this.setTitle("Moon Lader");
+        this.setTitle("Moon Lander");
         
         // Sets size of the frame.
         if(false) // Full screen mode
