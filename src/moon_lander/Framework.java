@@ -296,11 +296,12 @@ public class Framework extends Canvas {
             case GAMEOVER2P:
             	game2p.DrawGameOver(g2d, mousePosition(), gameTime);
             	buttonAdd(false);
+            	break;
             case MAIN_MENU:
                 g2d.drawImage(moonLanderMenuImg, 0, 0, frameWidth, frameHeight, null);
                 g2d.setColor(Color.white);
-                g2d.drawString("Use w a d keys to controle the rocket1.", frameWidth / 2 - 117, frameHeight / 2);
-                g2d.drawString("Use up left right keys to controle the rocket2.", frameWidth / 2 - 117, frameHeight / 2 + 30);
+                g2d.drawString("Use w a d keys to control the rocket1.", frameWidth / 2 - 117, frameHeight / 2);
+                g2d.drawString("Use up left right keys to control the rocket2.", frameWidth / 2 - 117, frameHeight / 2 + 30);
                 g2d.drawString("WWW.GAMETUTORIAL.NET", 7, frameHeight - 5);
                 buttonAdd(true);
                 
@@ -357,6 +358,18 @@ public class Framework extends Canvas {
         // We change game status so that the game can start.
         gameState = GameState.PLAYING;
     }
+    private void restartGame2()
+    {
+        // We set gameTime to zero and lastTime to current time for later calculations.
+        gameTime = 0;
+        lastTime = System.nanoTime();
+        
+        game2p.RestartGame2();
+        
+        // We change game status so that the game can start.
+        gameState = GameState.PLAYING2P;
+    }
+    
     
     /**
      * Returns the position of the mouse pointer in game frame/window.
@@ -398,7 +411,7 @@ public class Framework extends Canvas {
             break;
             case GAMEOVER2P:
             	if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER)
-                    restartGame();
+                    restartGame2();
             break;
         }
     }

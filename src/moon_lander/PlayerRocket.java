@@ -1,6 +1,7 @@
 package moon_lander;
 
 import java.awt.Color;
+
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -70,6 +71,7 @@ public class PlayerRocket {
      * Image of the rocket in air.
      */
     private BufferedImage rocketImg;
+    
     /**
      * Image of the rocket when landed.
      */
@@ -87,6 +89,7 @@ public class PlayerRocket {
      * Width of rocket.
      */
     public int rocketImgWidth;
+    
     /**
      * Height of rocket.
      */
@@ -124,6 +127,7 @@ public class PlayerRocket {
             rocketImgWidth = rocketImg.getWidth();
             rocketImgHeight = rocketImg.getHeight();
             
+            
             URL rocketLandedImgUrl = this.getClass().getResource("/resources/images/rocket_landed.png");
             rocketLandedImg = ImageIO.read(rocketLandedImgUrl);
             
@@ -160,6 +164,7 @@ public class PlayerRocket {
     public void Update()
     {
         // Calculating speed for moving up or down.
+    	
         if(Canvas.keyboardKeyState(KeyEvent.VK_W))
             speedY -= speedAccelerating;
         else
@@ -180,32 +185,18 @@ public class PlayerRocket {
         // Moves the rocket.
         x += speedX;
         y += speedY;
+        
+        /* Collision */
+        if (x < 0) {
+            x = 0;
+        } else if (x > Framework.frameWidth) {
+            x = Framework.frameWidth - rocketImgWidth;
+        }
+        if (y < 0) {
+            y = 0;
+        }
     }
-    public void Update2()
-    {
-        // Calculating speed for moving up or down.
-        if(Canvas.keyboardKeyState(KeyEvent.VK_UP))
-            speedY -= speedAccelerating;
-        else
-            speedY += speedStopping;
         
-        // Calculating speed for moving or stopping to the left.
-        if(Canvas.keyboardKeyState(KeyEvent.VK_LEFT))
-            speedX -= speedAccelerating;
-        else if(speedX < 0)
-            speedX += speedStopping;
-        
-        // Calculating speed for moving or stopping to the right.
-        if(Canvas.keyboardKeyState(KeyEvent.VK_RIGHT))
-            speedX += speedAccelerating;
-        else if(speedX > 0)
-            speedX -= speedStopping;
-        
-        // Moves the rocket.
-        x += speedX;
-        y += speedY;
-    }
-    
     public void Draw(Graphics2D g2d)
     {
         g2d.setColor(Color.white);
@@ -230,30 +221,7 @@ public class PlayerRocket {
             g2d.drawImage(rocketImg, x, y, null);
         }
     }
-    public void Draw2p(Graphics2D g2d)
-    {
-        g2d.setColor(Color.white);
-        g2d.drawString("Rocket coordinates: " + x + " : " + y, 500, 15);
-        
-        // If the rocket is landed.
-        if(landed)
-        {
-            g2d.drawImage(rocketLandedImg, x, y, null);
-        }
-        // If the rocket is crashed.
-        else if(crashed)
-        {
-            g2d.drawImage(rocketCrashedImg, x, y + rocketImgHeight - rocketCrashedImg.getHeight(), null);
-        }
-        // If the rocket is still in the space.
-        else
-        {
-            // If player hold down a W key we draw rocket fire.
-            if(Canvas.keyboardKeyState(KeyEvent.VK_UP))
-                g2d.drawImage(rocketFireImg, x + 12, y + 66, null);
-            g2d.drawImage(rocketImg, x, y, null);
-        }
-    }
+    
     
     
 }

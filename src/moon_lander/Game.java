@@ -22,12 +22,14 @@ public class Game {
     /**
      * The space rocket with which player will have to land.
      */
-    private PlayerRocket playerRocket1;
+    private PlayerRocket playerRocket1 = new PlayerRocket();
+    
+    
     
     /**
      * Landing area on which rocket will have to land.
      */
-    private LandingArea landingArea;
+    private LandingArea landingArea = new LandingArea();
     
     /**
      * Game background image.
@@ -92,6 +94,7 @@ public class Game {
      */
     public void RestartGame()
     {
+    	
         playerRocket1.ResetPlayer();
     }
     
@@ -105,7 +108,8 @@ public class Game {
     public void UpdateGame(long gameTime, Point mousePosition)
     {
         // Move the rocket
-        playerRocket1.Update();
+       
+    	playerRocket1.Update();
         
         // Checks where the player rocket is. Is it still in the space or is it landed or crashed?
         // First we check bottom y coordinate of the rocket if is it near the landing area.
