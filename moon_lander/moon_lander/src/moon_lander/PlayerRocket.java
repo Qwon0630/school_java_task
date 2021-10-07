@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import java.awt.Rectangle;
 
 /**
  * The space rocket with which player will have to land.
@@ -28,7 +29,7 @@ public class PlayerRocket {
     /**
      * X coordinate of the rocket.
      */
-    public int x;
+    public static int x;
     /**
      * Y coordinate of the rocket.
      */
@@ -85,6 +86,8 @@ public class PlayerRocket {
      */
     private BufferedImage rocketFireImg;
 
+    /* Enemy var */
+    private Unmoved_Enemy enemy;
     /**
      * Width of rocket.
      */
@@ -142,9 +145,12 @@ public class PlayerRocket {
 
         x = random.nextInt(Framework.frameWidth - rocketImgWidth);
         y = 10;
-
         speedX = 0;
         speedY = 0;
+    }
+
+    public Rectangle makeRect() {
+        return new Rectangle(x, y, rocketImgWidth, rocketImgHeight);
     }
 
     /**
@@ -172,7 +178,7 @@ public class PlayerRocket {
         // Moves the rocket.
         x += speedX;
         y += speedY;
-        /* Collision */
+        /* Border Collision */
         if (x < 0) {
             x = 0;
         } else if (x > Framework.frameWidth) {
@@ -186,7 +192,6 @@ public class PlayerRocket {
     public void Draw(Graphics2D g2d) {
         g2d.setColor(Color.white);
         g2d.drawString("Rocket coordinates: " + x + " : " + y, 5, 15);
-
         // If the rocket is landed.
         if (landed) {
             g2d.drawImage(rocketLandedImg, x, y, null);
@@ -203,5 +208,4 @@ public class PlayerRocket {
             g2d.drawImage(rocketImg, x, y, null);
         }
     }
-
 }

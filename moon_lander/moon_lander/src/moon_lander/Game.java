@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import java.awt.Rectangle;
 
 /**
  * Actual game.
@@ -114,6 +115,14 @@ public class Game {
                 playerRocket.crashed = true;
 
             Framework.gameState = Framework.GameState.GAMEOVER;
+        }
+
+        /* Enemy Collision */
+        Rectangle rocket = playerRocket.makeRect();
+        Rectangle enemy = UnmoveEnemy.drawRect();
+        if (rocket.intersects(enemy)) {
+            playerRocket.crashed = true;
+            Framework.gameState = Framework.gameState.GAMEOVER;
         }
     }
 
