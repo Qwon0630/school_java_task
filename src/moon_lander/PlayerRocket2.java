@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
+import java.awt.Rectangle;
 /**
  * The space rocket with which player will have to land.
  * 
@@ -47,6 +47,8 @@ public class PlayerRocket2 {
     /**
      * Accelerating speed of the rocket.
      */
+    public boolean getItem;
+    
     private int speedAccelerating;
     /**
      * Stopping/Falling speed of the rocket. Falling speed because, the gravity pulls the rocket down to the moon.
@@ -105,7 +107,9 @@ public class PlayerRocket2 {
         x = random.nextInt(Framework.frameWidth - rocket2pImgWidth);
     }
     
-    
+    public Rectangle drawRect() {
+    	return new Rectangle(x, y, rocket2pImgWidth, rocket2pImgHeight);
+    }
     private void Initialize()
     {
         random = new Random();
@@ -189,12 +193,16 @@ public class PlayerRocket2 {
         /* Collision */
         if (x < 0) {
             x = 0;
-        } else if (x > Framework.frameWidth) {
+            speedX = 0;
+        } else if (x > Framework.frameWidth-rocket2pImgWidth) {
             x = Framework.frameWidth - rocket2pImgWidth;
+            speedX = 0;
         }
         if (y < 0) {
             y = 0;
+            speedY = 0;
         }
+      
 
     }
   

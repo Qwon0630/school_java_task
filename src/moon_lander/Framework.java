@@ -60,7 +60,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING, MAIN_MENU, OPTIONS, PLAYING, PLAYING2P, GAMEOVER, GAMEOVER2P, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING, MAIN_MENU,LEVEL_MENU, OPTIONS, PLAYING, PLAYING2P, GAMEOVER, GAMEOVER2P,BLACKSCREEN, DESTROYED}
     /**
      * Current state of the game
      */
@@ -77,6 +77,9 @@ public class Framework extends Canvas {
     private Game game;
     private Game2p game2p;
     
+    public static int gameTimeTaken = 0;
+    
+    public static int blackscreenTime = 0;
     
     /**
      * Image for menu.
@@ -84,12 +87,80 @@ public class Framework extends Canvas {
     private BufferedImage moonLanderMenuImg;
     
     
-   JButton button1 = new JButton("1p");
-   JButton button2 = new JButton("2p");
-   JButton button3 = new JButton("3");
+   JButton button1 = new JButton("기본모드");
+   JButton button2 = new JButton("2인 경쟁모드");
+   JButton button3 = new JButton("난이도 선택모드");
    JButton button4 = new JButton("4");
    
-    public void buttonAdd(boolean add) {
+   JButton button5 = new JButton("Level 1");
+   JButton button6 = new JButton("Level 2");
+   JButton button7 = new JButton("Level 3");
+   JButton button8 = new JButton("Level 4");
+   JButton button9 = new JButton("Level 5");
+   
+   public void Levelbutton(boolean add) {
+	   if(add) {
+		   this.add(button5);
+   		   this.add(button6);
+   		   this.add(button7);
+   		   this.add(button8);  	
+   		   this.add(button9);
+   		   
+   		button5.setVisible(add);
+		button5.setBounds(100,400,100,50);
+		
+		button5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				newGame();
+			}
+		});
+		 
+		button6.setVisible(add);
+		button6.setBounds(210,400,100,50 );
+		
+		button6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		button7.setVisible(add);
+		button7.setBounds(330,400,100,50);
+		
+		button7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
+		button8.setVisible(add);
+		button8.setBounds(450,400,100,50);
+		
+		button8.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
+		button9.setVisible(add);
+		button9.setBounds(570,400,100,50);
+		
+		button9.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+   	
+	   }
+	   else {
+		   this.remove(button5);
+   		   this.remove(button6);
+   		   this.remove(button7);
+   		   this.remove(button8);
+   		   this.remove(button9);
+		   
+	   }
+   }
+    public void Mainbutton(boolean add) {
     	if(add) {
     		this.add(button1);
     		this.add(button2);
@@ -116,6 +187,12 @@ public class Framework extends Canvas {
     		button3.setVisible(add);
     		button3.setBounds(400,400,125,50);
     		
+    		button3.addActionListener(new ActionListener() {
+    			public void actionPerformed(ActionEvent e) {
+    				Framework.gameState = Framework.GameState.LEVEL_MENU;
+    				
+    			}
+    		});
     		button4.setVisible(add);
     		button4.setBounds(550,400,125,50);
     
@@ -129,15 +206,7 @@ public class Framework extends Canvas {
     	}
     }
     
-    
-    
-    	
-    	
-    
-    
-    
-  
-    
+     
     public Framework ()
     {
         super();
@@ -206,17 +275,28 @@ public class Framework extends Canvas {
                 break;
                 case PLAYING2P:
                     gameTime += System.nanoTime() - lastTime;
+                    gameTimeTaken+=1;
                     
                     game2p.UpdateGame(gameTime, mousePosition());
                     
                     lastTime = System.nanoTime();
                 break;
                     
+                case BLACKSCREEN:
+                	gameTime += System.nanoTime() - lastTime;
+                    gameTimeTaken+=1;
+                    
+                    game2p.UpdateGame(gameTime, mousePosition());
+                    
+                    lastTime = System.nanoTime();
+                	break;
                 	
                 case GAMEOVER:
                     //...
                 break;
                 case GAMEOVER2P:
+                	gameTimeTaken = 0;
+                	
                 	break;
                 case MAIN_MENU:
                     //...
@@ -227,6 +307,8 @@ public class Framework extends Canvas {
                 case GAME_CONTENT_LOADING:
                     //...
                 break;
+                case LEVEL_MENU:
+                	break;
                 case STARTING:
                     // Sets variables and objects.
                     Initialize();
@@ -283,19 +365,39 @@ public class Framework extends Canvas {
         {
             case PLAYING:
                 game.Draw(g2d, mousePosition());
-                buttonAdd(false);
+                Mainbutton(false);
+                Levelbutton(false);
             break;
             case PLAYING2P:
             	game2p.Draw(g2d, mousePosition());
-            	buttonAdd(false);
+            	if(gameTimeTaken>160) {
+            		game2p.DrawLandingArea(g2d, getMousePosition());
+            	}
+            	
+            	
+            	Mainbutton(false);
+            	Levelbutton(false);
+            	break;
+            	
+            case BLACKSCREEN:
+            	game2p.DrawBlackScreen(g2d);
+            	blackscreenTime+=1;
+            	if(blackscreenTime>50) {
+            		Framework.gameState = Framework.GameState.PLAYING2P;
+            	}
+            	Mainbutton(false);
+            	Levelbutton(false);
             	break;
             case GAMEOVER:
                 game.DrawGameOver(g2d, mousePosition(), gameTime);
-                buttonAdd(false);
+                Mainbutton(true);
+                Levelbutton(false);
             break;
             case GAMEOVER2P:
             	game2p.DrawGameOver(g2d, mousePosition(), gameTime);
-            	buttonAdd(false);
+            	Mainbutton(true);
+            	Levelbutton(false);
+            	
             	break;
             case MAIN_MENU:
                 g2d.drawImage(moonLanderMenuImg, 0, 0, frameWidth, frameHeight, null);
@@ -303,19 +405,28 @@ public class Framework extends Canvas {
                 g2d.drawString("Use w a d keys to control the rocket1.", frameWidth / 2 - 117, frameHeight / 2);
                 g2d.drawString("Use up left right keys to control the rocket2.", frameWidth / 2 - 117, frameHeight / 2 + 30);
                 g2d.drawString("WWW.GAMETUTORIAL.NET", 7, frameHeight - 5);
-                buttonAdd(true);
-                
-                
+                Mainbutton(true);
+                Levelbutton(false);
                 
             break;
+            case LEVEL_MENU:
+            	g2d.drawImage(moonLanderMenuImg,0,0,frameWidth,frameHeight,null);
+            	g2d.setColor(Color.white);
+            	g2d.drawString("Select your level!",frameWidth/2-117,frameHeight/2);
+            	Mainbutton(false);
+            	Levelbutton(true);
+            	
+            	break;
             case OPTIONS:
-            	buttonAdd(false);
+            	Mainbutton(false);
+            	Levelbutton(false);
                 //...
             break;
             case GAME_CONTENT_LOADING:
                 g2d.setColor(Color.white);
                 g2d.drawString("GAME is LOADING", frameWidth / 2 - 50, frameHeight / 2);
-                buttonAdd(false);
+                Mainbutton(false);
+                Levelbutton(false);
             break;
         }
     }

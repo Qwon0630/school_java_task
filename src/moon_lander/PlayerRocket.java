@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
+import java.awt.Rectangle;
 /**
  * The space rocket with which player will have to land.
  * 
@@ -43,6 +43,8 @@ public class PlayerRocket {
      * Has rocket crashed?
      */
     public boolean crashed;
+    
+    public boolean getItem;
         
     /**
      * Accelerating speed of the rocket.
@@ -85,6 +87,8 @@ public class PlayerRocket {
      */
     private BufferedImage rocketFireImg;
     
+    private BufferedImage blackscreenImg;
+    
     /**
      * Width of rocket.
      */
@@ -103,6 +107,9 @@ public class PlayerRocket {
         
         // Now that we have rocketImgWidth we set starting x coordinate.
         x = random.nextInt(Framework.frameWidth - rocketImgWidth);
+    }
+    public Rectangle drawRect() {
+    	return new Rectangle(x, y, rocketImgWidth, rocketImgHeight);
     }
     
     
@@ -136,6 +143,9 @@ public class PlayerRocket {
             
             URL rocketFireImgUrl = this.getClass().getResource("/resources/images/rocket_fire.png");
             rocketFireImg = ImageIO.read(rocketFireImgUrl);
+            
+            URL blackscreenImgUrl = this.getClass().getResource("/resources/images/blackscreen.png");
+            blackscreenImg = ImageIO.read(blackscreenImgUrl);
         }
         catch (IOException ex) {
             Logger.getLogger(PlayerRocket.class.getName()).log(Level.SEVERE, null, ex);
@@ -189,16 +199,20 @@ public class PlayerRocket {
         /* Collision */
         if (x < 0) {
             x = 0;
-        } else if (x > Framework.frameWidth) {
+            speedX = 0;
+        } else if (x > Framework.frameWidth-rocketImgWidth) {
             x = Framework.frameWidth - rocketImgWidth;
+            speedX = 0;
         }
         if (y < 0) {
             y = 0;
+            speedY = 0;
         }
     }
         
     public void Draw(Graphics2D g2d)
     {
+    	
         g2d.setColor(Color.white);
         g2d.drawString("Rocket coordinates: " + x + " : " + y, 5, 15);
         
@@ -212,6 +226,7 @@ public class PlayerRocket {
         {
             g2d.drawImage(rocketCrashedImg, x, y + rocketImgHeight - rocketCrashedImg.getHeight(), null);
         }
+        
         // If the rocket is still in the space.
         else
         {
@@ -220,6 +235,14 @@ public class PlayerRocket {
                 g2d.drawImage(rocketFireImg, x + 12, y + 66, null);
             g2d.drawImage(rocketImg, x, y, null);
         }
+        if(getItem) {
+        	
+        		g2d.drawImage(blackscreenImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
+        		
+        	
+        	
+        }
+        
     }
     
     
