@@ -17,8 +17,8 @@ import java.util.Random;
  */
 
 public class LandingArea {
-	private Random random;
-    
+    private Random random;
+
     /**
      * X coordinate of the landing area.
      */
@@ -27,60 +27,57 @@ public class LandingArea {
      * Y coordinate of the landing area.
      */
     public int y;
-    
+
     /**
      * Image of landing area.
      */
     private BufferedImage landingArea1Img;
-    
+
     /**
      * Width of landing area.
      */
     public int landingArea1ImgWidth;
-    
-    
-    public LandingArea()
-    {
+
+    public LandingArea() {
         Initialize();
         LoadContent();
     }
-    
-    
+
     public void ResetLandingArea() {
-    	random = new Random();
+        random = new Random();
         // X coordinate of the landing area is at 46% frame width.
         x = random.nextInt(Framework.frameWidth - landingArea1ImgWidth);
         // Y coordinate of the landing area is at 86% frame height.
-        y = (int)(Framework.frameHeight * 0.88);
+        y = (int) (Framework.frameHeight * 0.88);
     }
-    
-    
-    private void Initialize()
-    {   
-    	random = new Random();
+
+    private void Initialize() {
+        random = new Random();
         // X coordinate of the landing area is at 46% frame width.
-        x = random.nextInt(Framework.frameWidth-landingArea1ImgWidth);
+        x = random.nextInt(Framework.frameWidth - landingArea1ImgWidth);
         // Y coordinate of the landing area is at 86% frame height.
-        y = (int)(Framework.frameHeight * 0.88);
+        y = (int) (Framework.frameHeight * 0.88);
+        
+        
     }
-    
-    private void LoadContent()
-    {
-        try
-        {
+
+    private void LoadContent() {
+        try {
             URL landingArea1ImgUrl = this.getClass().getResource("/resources/images/landing_area.png");
             landingArea1Img = ImageIO.read(landingArea1ImgUrl);
             landingArea1ImgWidth = landingArea1Img.getWidth();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(LandingArea.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public void Draw(Graphics2D g2d)
-    {
+
+    public void BlinkLandingArea1(Graphics2D g2d) {
+    	g2d.drawImage(landingArea1Img,x,y,null);
+    	
+    	
+    }
+    public void Draw(Graphics2D g2d) {
         g2d.drawImage(landingArea1Img, x, y, null);
     }
-    
+
 }
